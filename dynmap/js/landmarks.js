@@ -1,3 +1,5 @@
+var latlng = function(x,y,z) { return dynmap.getProjection().fromLocationToLatLng(new Location(undefined, x,y,z)); }
+
 componentconstructors['landmarks'] = function(dynmap, configuration) {
 	var markers = {};
 	
@@ -21,18 +23,19 @@ componentconstructors['landmarks'] = function(dynmap, configuration) {
 				var name = data[i].name;
 				if(markers[name])
 				{
-					var markerPosition = dynmap.map.getProjection().fromWorldToLatLng(data[i].x, data[i].y, data[i].z);
+					var markerPosition = latlng(data[i].x, data[i].y, data[i].z);
 					markers[name]['outdated'] = false;
-					markers[name]['marker'].setPosition(markerPosition);
+					markers[name]['marker'].setLatLng(markerPosition);
 					markers[name]['data'] = data[i];
-					markers[name]['marker'].toggle(dynmap.world.name == data[i].world);
+					$(markers[name]['marker']._element).toggle(dynmap.world.name === data[i].world);
 				}
 				else
 				{
 					markers[name] = {}
 					markers[name]['data'] = data[i];
 					markers[name]['marker'] = createMarker(data[i]);
-					markers[name]['marker'].toggle(dynmap.world.name == data[i].world);
+					$(markers[name]['marker']._element).toggle(dynmap.world.name === data[i].world);
+					dynmap.map.addLayer(markers[name]['marker']);
 				}
 			}
 			
@@ -40,7 +43,7 @@ componentconstructors['landmarks'] = function(dynmap, configuration) {
 			$.each(markers, function(key, value) {
 				if(markers[key]['outdated'] === true)
 				{
-					markers[key]['marker'].remove();
+					dynmap.map.removeLayer(markers[key]['marker']);
 					delete markers[key];
 				}
 			});
@@ -51,9 +54,9 @@ componentconstructors['landmarks'] = function(dynmap, configuration) {
 		for(var name in markers)
 		{
 			var data = markers[name]['data'];
-			var markerPosition = dynmap.map.getProjection().fromWorldToLatLng(data.x, data.y, data.z);
-			markers[name]['marker'].setPosition(markerPosition);
-			markers[name]['marker'].toggle(dynmap.world.name == data.world);
+			var markerPosition = latlng(data.x, data.y, data.z);
+			markers[name]['marker'].setLatLng(markerPosition);
+			$(markers[name]['marker']._element).toggle(dynmap.world.name == data.world);
 		}
 	});
 	
@@ -68,15 +71,16 @@ componentconstructors['landmarks'] = function(dynmap, configuration) {
 
 function createMarker(data)
 {
-	var markerPosition = dynmap.map.getProjection().fromWorldToLatLng(data.x, data.y, data.z);
-	return new CustomMarker(markerPosition, dynmap.map, function(div) {
-		$(div)
+	var markerPosition = latlng(data.x, data.y, data.z);
+	return new L.CustomMarker(markerPosition, { elementCreator: function() {
+		return $('<div/>')
 			.addClass('Marker')
 			.addClass('landmarkMarker')
 			.append($('<span/>')
 				.addClass('landmarkName')
-				.text(data.name));
-	});
+				.text(data.name))
+			[0];
+	}});
 }
 
 function onShowMarkers()
