@@ -1,6 +1,6 @@
 name: Landmarks
 main: de.wecallit42.minecraft.landmarks.LandmarksPlugin
-version: 0.2
+version: 0.3
 
 commands:
   landmark:

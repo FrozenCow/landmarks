@@ -17,7 +17,7 @@
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/dynmap</directory>
-      <outputDirectory>/dynmap</outputDirectory>
+      <outputDirectory>/dynmap/web</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}</directory>

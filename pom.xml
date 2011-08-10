@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.wecallit42.minecraft</groupId>
   <artifactId>landmarks</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
   <name>landmarks</name>
     <properties>
        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
